@@ -1,5 +1,4 @@
-﻿using DemExBumagaProgramm.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,25 +15,25 @@ using System.Windows.Shapes;
 namespace DemExBumagaProgramm.Views.Windows
 {
     /// <summary>
-    /// Логика взаимодействия для ChangePriorityWindow.xaml
+    /// Логика взаимодействия для ProductCountWIndow.xaml
     /// </summary>
-    public partial class ChangePriorityWindow : BaseWindow
+    public partial class ProductCountWindow : BaseWindow
     {
-        private int priority;
-        public ChangePriorityWindow(int priority)
+        private int count;
+        public ProductCountWindow()
         {
             InitializeComponent();
-            Priority = priority;
             DataContext = this;
 
         }
-        public int Priority { get => priority; set { priority = value; OnPropertyChanged(); } }
+        public int Count { get => count; set { count = value; } }
+
 
         private void OK_Click(object sender, RoutedEventArgs e)
         {
-            if (Priority < 0)
+            if (Count <= 0)
             {
-                MessageBox.Show("Приоритет не может быть меньше 0");
+                MessageBox.Show("Количество не может быть меньше или равно 0");
             }
             else
             {

@@ -28,7 +28,12 @@
                 <ComboBox ItemsSource="{Binding AgentTypes}" SelectedItem="{Binding SelectedType}" DisplayMemberPath="Title"/>
             </GroupBox>
         </Grid>
-        <ListView x:Name="agentsList" Grid.Row="1" Margin="5" SelectionMode="Extended"  ItemsSource="{Binding DisplayedAgents}" SelectionChanged="pagesList_SelectionChanged">
+        <ListView x:Name="agentsList" Grid.Row="1" Margin="5" SelectionMode="Extended"  ItemsSource="{Binding DisplayedAgents}" SelectedItem="{Binding SelectedAgent}" SelectionChanged="pagesList_SelectionChanged">
+            <ListView.Style>
+                <Style TargetType="ListView">
+                    <EventSetter Event="MouseDoubleClick" Handler="ListView_MouseDoubleClick"/>
+                </Style>
+            </ListView.Style>
             <ListView.ItemTemplate>
                 <DataTemplate DataType="ListViewItem">
                     <Border BorderBrush="Black" BorderThickness="1">
@@ -56,7 +61,12 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <Button Grid.Row="2" Visibility="{Binding ChangePriorityVisibility}" HorizontalAlignment="Left" Margin="5" Content="Изменить приоритет на..." Width="200" VerticalAlignment="Center" Height="30" x:Name="ChangeOn" Click="ChangeOn_Click"/>
+        <StackPanel Orientation="Horizontal"  Grid.Row="2">
+            <Button HorizontalAlignment="Left" Margin="5" Content="Добавить" Width="200" VerticalAlignment="Center" Height="30" x:Name="Add" Click="Add_Click"/>
+            <Button HorizontalAlignment="Left" Margin="5" Content="Редактировать" Width="200" VerticalAlignment="Center" Height="30" x:Name="Edit" Click="Edit_Click"/>
+            <Button Grid.Row="2" Visibility="{Binding ChangePriorityVisibility}" HorizontalAlignment="Left" Margin="5" Content="Изменить приоритет на..." Width="200" VerticalAlignment="Center" Height="30" x:Name="ChangeOn" Click="ChangeOn_Click"/>
+
+        </StackPanel>
 
         <StackPanel Orientation="Horizontal" Grid.Row="2"  HorizontalAlignment="Right" >
             <TextBlock x:Name="Back" Text="&lt;" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Style="{StaticResource hover}" Margin="0,0" Width="12" MouseDown="Back_MouseDown">

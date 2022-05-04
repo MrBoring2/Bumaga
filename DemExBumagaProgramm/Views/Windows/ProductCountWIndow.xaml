@@ -1,0 +1,17 @@
+﻿<local:BaseWindow x:Class="DemExBumagaProgramm.Views.Windows.ProductCountWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DemExBumagaProgramm.Views.Windows"
+        mc:Ignorable="d"
+         Title="Введите количество" Height="135" Width="400" ResizeMode="NoResize" Icon="/DemExBumagaProgramm;component/Resources/Images/Приятный шелест.png" RenderOptions.BitmapScalingMode="HighQuality">
+    <Grid>
+        <TextBox Text="{Binding Count}" VerticalAlignment="Top" Margin="5" FontSize="40"/>
+        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Orientation="Horizontal">
+            <Button x:Name="OK" Content="ОК" Margin="5" Width="100" Click="OK_Click"/>
+            <Button x:Name="Cancel" Content="Отмена" Margin="5" Width="100" Click="Cancel_Click"/>
+        </StackPanel>
+
+    </Grid>
+</local:BaseWindow>

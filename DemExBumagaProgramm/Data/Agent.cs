@@ -52,6 +52,7 @@ namespace DemExBumagaProgramm.Data
         [StringLength(40)]
         public string KPP { get; set; }
         public byte[] Image { get; set; }
+        [NotMapped]
         public byte[] GetImage
         {
             get
@@ -72,6 +73,11 @@ namespace DemExBumagaProgramm.Data
                         return ms.ToArray();
                     }
                 }
+
+            }
+            set
+            {
+                Image = value;
             }
         }
         public virtual AgentType AgentType { get; set; }

@@ -91,6 +91,9 @@
     <Compile Include="Views\Windows\ChangePriorityWindow.xaml.cs">
       <DependentUpon>ChangePriorityWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Windows\ProductCountWIndow.xaml.cs">
+      <DependentUpon>ProductCountWIndow.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -141,6 +144,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Windows\ChangePriorityWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\ProductCountWIndow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

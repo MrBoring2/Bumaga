@@ -26,6 +26,7 @@ namespace DemExBumagaProgramm.Views.Windows
         private ObservableCollection<Agent> displayedAgents;
         private ObservableCollection<int> pages;
         private ItemWithTitle<AgentType> selectedType;
+        private Agent selectedAgent;
         private SortParam selectedSort;
         private Visibility changePriorityVisibility;
         private string search;
@@ -47,6 +48,7 @@ namespace DemExBumagaProgramm.Views.Windows
         public ObservableCollection<SortParam> SortParams { get; set; }
         public ItemWithTitle<AgentType> SelectedType { get => selectedType; set { selectedType = value; OnPropertyChanged(); RefreshAgents(); } }
         public SortParam SelectedSort { get => selectedSort; set { selectedSort = value; OnPropertyChanged(); RefreshAgents(); } }
+        public Agent SelectedAgent { get => selectedAgent; set { selectedAgent = value; OnPropertyChanged(); } }
         public Visibility ChangePriorityVisibility { get => changePriorityVisibility; set { changePriorityVisibility = value; OnPropertyChanged(); } }
         public string Search { get => search; set { search = value; OnPropertyChanged(); RefreshAgents(); } }
         public int SelectedPage { get => selectedPage; set { selectedPage = value; OnPropertyChanged(); } }
@@ -82,7 +84,8 @@ namespace DemExBumagaProgramm.Views.Windows
         }
         private void LoadAgents()
         {
-            Agents = context.Agent.Include("ProductSale").Include("AgentType").ToList();
+            //.Include("ProductSale").Include("AgentType")
+            Agents = context.Agent.ToList();
             RefreshAgents();
         }
 
@@ -182,6 +185,43 @@ namespace DemExBumagaProgramm.Views.Windows
                 }
                 context.SaveChanges();
                 LoadAgents();
+            }
+        }
+
+        private void Add_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new AgentWindow();
+            if (window.ShowDialog() == true)
+            {
+                LoadAgents();
+                MessageBox.Show($"Агент {window.Agent.Name} успешно добавлен.", "Оповещение", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private void Edit_Click(object sender, RoutedEventArgs e)
+        {
+            if (agentsList.SelectedItems.Count == 1)
+            {
+                var window = new AgentWindow(SelectedAgent);
+                if(window.ShowDialog() == true)
+                {
+                    LoadAgents();
+                    MessageBox.Show($"Агент {SelectedAgent.Name} успешно изменён.", "Оповещение", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Выбрано больше 1 элемента!", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var window = new AgentWindow(SelectedAgent);
+            if (window.ShowDialog() == true)
+            {
+                LoadAgents();
+                MessageBox.Show($"Агент {SelectedAgent.Name} успешно изменён.", "Оповещение", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
     }

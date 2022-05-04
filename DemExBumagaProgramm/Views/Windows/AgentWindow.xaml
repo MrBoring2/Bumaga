@@ -5,8 +5,80 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DemExBumagaProgramm.Views.Windows"
         mc:Ignorable="d"
-        Title="AgentWindow" Height="450" Width="800">
+        Title="Карточка агента" Height="670" Width="915" ResizeMode="NoResize" Icon="/DemExBumagaProgramm;component/Resources/Images/Приятный шелест.png" RenderOptions.BitmapScalingMode="HighQuality">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Text="Карточка агента" HorizontalAlignment="Center" Grid.ColumnSpan="2" FontSize="30" VerticalAlignment="Top" Margin="5,0" Height="34"/>
+        <StackPanel Grid.Column="0" Grid.Row="1" Margin="5" Grid.RowSpan="2">
+            <GroupBox Header="Наименование">
+                <TextBox Text="{Binding AgentName}"/>
+            </GroupBox>
+            <GroupBox Header="Тип агента">
+                <ComboBox ItemsSource="{Binding AgentTypes}" SelectedItem="{Binding AgentType}" DisplayMemberPath="Name" SelectedValue="{Binding AgentType.Id}" SelectedValuePath="Id"/>
+            </GroupBox>
+            <GroupBox Header="Приоритет">
+                <TextBox Text="{Binding Priority}"/>
+            </GroupBox>
+            <GroupBox Header="Адрес">
+                <TextBox Text="{Binding Adres}"/>
+            </GroupBox>
+            <GroupBox Header="ИНН">
+                <TextBox Text="{Binding INN}"/>
+            </GroupBox>
+            <GroupBox Header="КПП">
+                <TextBox Text="{Binding KPP}"/>
+            </GroupBox>
+            <GroupBox Header="Имя директора">
+                <TextBox Text="{Binding DirectorName}"/>
+            </GroupBox>
+            <GroupBox Header="Телефон">
+                <TextBox Text="{Binding PhoneNumber}"/>
+            </GroupBox>
+            <GroupBox Header="Email">
+                <TextBox Text="{Binding Email}"/>
+            </GroupBox>
+            <Image Height="100" Width="100" Source="{Binding Image}" Margin="5"/>
+            <Button x:Name="LoadImage" Content="Загрузить" Width="150" Margin="5,0,5,5" Click="LoadImage_Click"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2">
+            <Button x:Name="Save" Content="Сохранить" Width="150" Margin="5" Click="Save_Click"/>
+            <Button x:Name="Delete" Content="Удалить" Width="150" Margin="5" Visibility="{Binding RemoveVisivility}" Click="Delete_Click"/>
+            <Button x:Name="Cancel" Content="Отмена" Width="150" Margin="5" Click="Cancel_Click"/>
+        </StackPanel>
+        <GroupBox Grid.Row="1" Grid.Column="1" Margin="5" Header="Реализоация продукции">
+            <StackPanel>
+                <GroupBox Header="Добавить">
+                    <StackPanel>
+                        <TextBox Margin="2,2" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}"/>
+                        <ComboBox Margin="2,0,2,2" DisplayMemberPath="Name" ItemsSource="{Binding DisplayedProducts}" SelectedItem="{Binding SelectedProduct}"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <DataGrid AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" CanUserResizeColumns="False" ItemsSource="{Binding AgentSales}" SelectedItem="{Binding SelectedProductSale}" Height="406" VerticalAlignment="Top" Background="Transparent" Margin="0,5" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Название продукта" Width="2*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate DataType="{x:Type DataGridCell}">
+                                    <TextBlock Text="{Binding Product.Name}" TextWrapping="Wrap"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Количество" Binding="{Binding Count}" Width="*"/>
+                        <DataGridTextColumn Header="Дата продажи" Width="*" Binding="{Binding DatefRealization, StringFormat={}{0:dd.MM.yyyy}}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Button x:Name="RemoveFromSales" Content="Удалить из списка" Margin="5" Click="RemoveFromSales_Click"/>
+            </StackPanel>
+
+        </GroupBox>
     </Grid>
 </local:BaseWindow>

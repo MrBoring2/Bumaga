@@ -49,3 +49,5 @@ C:\Users\user452.CHENK\.ssh\Bumaga\DemExBumagaProgramm\obj\Debug\Views\Windows\C
 C:\Users\user452.CHENK\.ssh\Bumaga\DemExBumagaProgramm\obj\Debug\Views\Windows\ChangePriorityWindow.baml
 C:\Users\user452.CHENK\.ssh\Bumaga\DemExBumagaProgramm\obj\Debug\Views\Windows\AgentWindow.g.cs
 C:\Users\user452.CHENK\.ssh\Bumaga\DemExBumagaProgramm\obj\Debug\Views\Windows\AgentWindow.baml
+C:\Users\user452.CHENK\.ssh\Bumaga\DemExBumagaProgramm\obj\Debug\Views\Windows\ProductCountWIndow.g.cs
+C:\Users\user452.CHENK\.ssh\Bumaga\DemExBumagaProgramm\obj\Debug\Views\Windows\ProductCountWIndow.baml

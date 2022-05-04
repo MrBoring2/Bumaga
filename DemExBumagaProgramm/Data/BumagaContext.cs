@@ -10,6 +10,7 @@ namespace DemExBumagaProgramm.Data
         public BumagaContext()
             : base("name=BumagaContext")
         {
+            Configuration.LazyLoadingEnabled = true;
         }
 
         public virtual DbSet<Agent> Agent { get; set; }
