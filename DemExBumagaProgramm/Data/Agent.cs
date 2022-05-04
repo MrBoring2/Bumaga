@@ -5,7 +5,9 @@ namespace DemExBumagaProgramm.Data
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
+    using System.IO;
     using System.Linq;
+    using System.Windows.Media.Imaging;
 
     [Table("Agent")]
     public partial class Agent : BaseEntity
@@ -50,6 +52,28 @@ namespace DemExBumagaProgramm.Data
         [StringLength(40)]
         public string KPP { get; set; }
         public byte[] Image { get; set; }
+        public byte[] GetImage
+        {
+            get
+            {
+                if (Image != null)
+                {
+                    return Image;
+                }
+                else
+                {
+                    var uri = new Uri("pack://application:,,,/Resources/Images/picture.png", UriKind.RelativeOrAbsolute);
+                    var bitmap = new BitmapImage(uri);
+                    using (var ms = new MemoryStream())
+                    {
+                        var pngEncoder = new PngBitmapEncoder();
+                        pngEncoder.Frames.Add(BitmapFrame.Create(bitmap));
+                        pngEncoder.Save(ms);
+                        return ms.ToArray();
+                    }
+                }
+            }
+        }
         public virtual AgentType AgentType { get; set; }
         public int CountOfSales => ProductSale.Count;
         public int Discount

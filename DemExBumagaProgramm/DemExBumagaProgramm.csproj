@@ -84,7 +84,13 @@
     <Compile Include="Views\Windows\AgentsListWindow.xaml.cs">
       <DependentUpon>AgentsListWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Windows\AgentWindow.xaml.cs">
+      <DependentUpon>AgentWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Windows\BaseWindow.cs" />
+    <Compile Include="Views\Windows\ChangePriorityWindow.xaml.cs">
+      <DependentUpon>ChangePriorityWindow.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -127,6 +133,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Windows\AgentsListWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\AgentWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\ChangePriorityWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

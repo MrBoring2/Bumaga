@@ -27,7 +27,9 @@ namespace DemExBumagaProgramm.Views.Windows
         private ObservableCollection<int> pages;
         private ItemWithTitle<AgentType> selectedType;
         private SortParam selectedSort;
+        private Visibility changePriorityVisibility;
         private string search;
+        private int lastPage;
         private int itemsPerPage;
         private int selectedPage;
         public AgentsListWindow()
@@ -43,26 +45,32 @@ namespace DemExBumagaProgramm.Views.Windows
         public ObservableCollection<int> Pages { get => pages; set { pages = value; OnPropertyChanged(); } }
         public ObservableCollection<ItemWithTitle<AgentType>> AgentTypes { get; set; }
         public ObservableCollection<SortParam> SortParams { get; set; }
-        public ItemWithTitle<AgentType> SelectedType { get => selectedType; set { selectedType = value; OnPropertyChanged(); } }
-        public SortParam SelectedSort { get => selectedSort; set { selectedSort = value; OnPropertyChanged(); } }
-        public string Search { get => search; set { search = value; OnPropertyChanged(); } }
+        public ItemWithTitle<AgentType> SelectedType { get => selectedType; set { selectedType = value; OnPropertyChanged(); RefreshAgents(); } }
+        public SortParam SelectedSort { get => selectedSort; set { selectedSort = value; OnPropertyChanged(); RefreshAgents(); } }
+        public Visibility ChangePriorityVisibility { get => changePriorityVisibility; set { changePriorityVisibility = value; OnPropertyChanged(); } }
+        public string Search { get => search; set { search = value; OnPropertyChanged(); RefreshAgents(); } }
+        public int SelectedPage { get => selectedPage; set { selectedPage = value; OnPropertyChanged(); } }
 
         private void InitializeFields()
         {
             search = string.Empty;
             itemsPerPage = 10;
             selectedPage = 1;
+            lastPage = selectedPage;
+            Pages = new ObservableCollection<int>();
+
             SortParams = new ObservableCollection<SortParam>
             {
-                new SortParam("Наименование", "Name", true),
-                new SortParam("Наименование", "Name", false),
-                new SortParam("Размер скидки", "Discount", true),
-                new SortParam("Размер скидки", "Discount", false),
-                new SortParam("Приоритет агента", "Priority", true),
-                new SortParam("Приоритет агента", "Priority", false)
+                new SortParam("Наименование по возрастанию", "Name", true),
+                new SortParam("Наименование по убыванию", "Name", false),
+                new SortParam("Размер скидки по возрастанию", "Discount", true),
+                new SortParam("Размер скидки по убыванию", "Discount", false),
+                new SortParam("Приоритет агента по возрастанию", "Priority", true),
+                new SortParam("Приоритет агента по убыванию", "Priority", false)
             };
             selectedSort = SortParams.FirstOrDefault();
             OnPropertyChanged(nameof(SelectedSort));
+            OnPropertyChanged(nameof(SelectedPage));
         }
 
         private void LoadTypes()
@@ -96,7 +104,18 @@ namespace DemExBumagaProgramm.Views.Windows
             //Филтрация по типу
             filteredAgents = filteredAgents.Where(p => SelectedType.Item is null ? true : p.TypeId == SelectedType.Item.Id);
 
+            //Постаничный вывод
+            filteredAgents = filteredAgents.Skip((SelectedPage - 1) * itemsPerPage).Take(itemsPerPage);
+
             DisplayedAgents = new ObservableCollection<Agent>(filteredAgents);
+
+            Pages.Clear();
+            var maxPage = MaxPage(Agents, itemsPerPage);
+            for (int i = 1; i <= maxPage; i++)
+            {
+                Pages.Add(i);
+            }
+            SelectedPage = Pages.FirstOrDefault(p => p == SelectedPage);
         }
         private IEnumerable<Agent> SortAgents(IEnumerable<Agent> agents)
         {
@@ -111,8 +130,59 @@ namespace DemExBumagaProgramm.Views.Windows
         }
         private int MaxPage(IEnumerable<Agent> agents, int itemsPerPage)
         {
-            return (int)Math.Ceiling((float)agents.Count() / (float)itemsPerPage);
+            var filteredAgents = agents.Where(p => p.Name.ToLower().Contains(Search.ToLower()) ||
+                                                       p.PhoneNumber.ToLower().Contains(Search.ToLower()) ||
+                                                       p.Email.ToLower().Contains(Search.ToLower()));
+            //Филтрация по типу
+            filteredAgents = filteredAgents.Where(p => SelectedType.Item is null ? true : p.TypeId == SelectedType.Item.Id);
+            return (int)Math.Ceiling((float)filteredAgents.Count() / (float)itemsPerPage);
         }
 
+        private void Forward_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (SelectedPage <= MaxPage(Agents, itemsPerPage))
+            {
+                SelectedPage++;
+            }
+        }
+
+        private void Back_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (SelectedPage > 0)
+            {
+                SelectedPage--;
+            }
+        }
+
+        private void pagesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if ((sender as ListView).SelectedItems.Count > 1)
+            {
+                ChangePriorityVisibility = Visibility.Visible;
+            }
+            else
+            {
+                ChangePriorityVisibility = Visibility.Collapsed;
+            }
+            if (SelectedPage != lastPage)
+            {
+                lastPage = SelectedPage;
+                RefreshAgents();
+            }
+        }
+
+        private void ChangeOn_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new ChangePriorityWindow(agentsList.SelectedItems.Cast<Agent>().Max(p => p.Priority));
+            if (window.ShowDialog() == true)
+            {
+                foreach (var item in agentsList.SelectedItems.Cast<Agent>())
+                {
+                    item.Priority = window.Priority;
+                }
+                context.SaveChanges();
+                LoadAgents();
+            }
+        }
     }
 }
