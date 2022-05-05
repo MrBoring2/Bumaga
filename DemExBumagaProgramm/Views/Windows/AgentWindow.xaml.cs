@@ -33,6 +33,7 @@ namespace DemExBumagaProgramm.Views.Windows
         private ProductSale selectedAgentSale;
         public AgentWindow()
         {
+            DeletedSales = new List<ProductSale>();
             context = App.Context;
             Agent = new Agent();
             InitializeComponent();
@@ -70,6 +71,7 @@ namespace DemExBumagaProgramm.Views.Windows
         public ObservableCollection<ProductSale> AgentSales { get => agentSales; set { agentSales = value; OnPropertyChanged(); } }
         public ObservableCollection<Product> DisplayedProducts { get => displayedProducts; set { displayedProducts = value; OnPropertyChanged(); } }
         public ObservableCollection<AgentType> AgentTypes { get => agentTypes; set { agentTypes = value; OnPropertyChanged(); } }
+        public List<ProductSale> DeletedSales { get; set; }
         public ProductSale SelectedProductSale { get => selectedAgentSale; set { selectedAgentSale = value; OnPropertyChanged(); } }
         public string Search { get => search; set { search = value; OnPropertyChanged(); RefreshProducts(); } }
         public List<Product> Products { get; set; }
@@ -111,7 +113,7 @@ namespace DemExBumagaProgramm.Views.Windows
                 var window = new ProductCountWindow();
                 if (window.ShowDialog() == true)
                 {
-                    AgentSales.Add(new ProductSale { Agent = Agent, Count = window.Count, Product = SelectedProduct, DatefRealization = DateTime.Now.Date });
+                    AgentSales.Add(new ProductSale { AgentId = Agent.Id, ProductId = SelectedProduct.Id, Agent = Agent, Count = window.Count, Product = SelectedProduct, DatefRealization = DateTime.Now.Date });
                 }
             }
         }
@@ -119,7 +121,7 @@ namespace DemExBumagaProgramm.Views.Windows
         private void LoadImage_Click(object sender, RoutedEventArgs e)
         {
             var openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Изображения | *.PNG, *.JPG, *.JPEG";
+            openFileDialog.Filter = "Изображения | *.PNG; *.JPG; *.JPEG;";
             if (openFileDialog.ShowDialog() == true)
             {
                 Image = File.ReadAllBytes(openFileDialog.FileName);
@@ -130,6 +132,7 @@ namespace DemExBumagaProgramm.Views.Windows
         {
             if (SelectedProductSale != null)
             {
+                DeletedSales.Add(SelectedProductSale);
                 AgentSales.Remove(SelectedProductSale);
             }
         }
@@ -141,7 +144,15 @@ namespace DemExBumagaProgramm.Views.Windows
 
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
+            if (Agent.ProductSale.Count > 0)
+            {
+                MessageBox.Show("У агента есть история реализации продукции!", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            else
+            {
 
+                context.Agent.Remove(Agent);
+            }
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
@@ -150,15 +161,22 @@ namespace DemExBumagaProgramm.Views.Windows
             {
                 if (Agent.ProductSale.Count > 0)
                 {
-                    Agent.ProductSale = new List<ProductSale>(AgentSales);
-                    context.Entry(Agent).State = System.Data.Entity.EntityState.Modified;
-                    //foreach (var item in AgentSales)
-                    //{
-                    //    if (item.Id == 0)
-                    //    {
-                    //        Agent.ProductSale.Add(item);
-                    //    }
-                    //}
+                    foreach (var item in Agent.ProductSale.ToList())
+                    {
+                        if (DeletedSales.Any(p => p.Id == item.Id) == true)
+                        {
+                            context.Entry(item).State = System.Data.Entity.EntityState.Deleted;
+                        }
+
+                    }
+
+                    foreach (var item in AgentSales.ToList())
+                    {
+                        if (Agent.ProductSale.Any(p => p.Id == item.Id) == false)
+                        {
+                            Agent.ProductSale.Add(SelectedProductSale);
+                        }
+                    }
                 }
                 else
                 {

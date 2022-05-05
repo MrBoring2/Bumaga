@@ -41,6 +41,7 @@ namespace DemExBumagaProgramm.Views.Windows
             LoadData();
             DataContext = this;
         }
+
         public List<Agent> Agents { get; set; }
         public ObservableCollection<Agent> DisplayedAgents { get => displayedAgents; set { displayedAgents = value; OnPropertyChanged(); } }
         public ObservableCollection<int> Pages { get => pages; set { pages = value; OnPropertyChanged(); } }
